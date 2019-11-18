@@ -7,7 +7,9 @@ namespace AOC18
         static void Main(string[] args)
         {
             //new Aoc01().run();    
-           // new Aoc02().run();
+            new Aoc02().run();
+            //var a  = new Aoc02(); //.run();
+            //Console.WriteLine(a.countOccurance("aabbabdda", 'b')); 
         }
     }
 }

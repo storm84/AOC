@@ -11,41 +11,65 @@ namespace AOC18
         }
         public override string executeA(string[] inputs)
         {
-            int result = 0;
+            int twiceCnt = 0, thriceCnt = 0;
+            var resultDict = new Dictionary<int, int>();
             foreach(var input in inputs)
             {
-                Dictionary<char,int> dict = new Dictionary<char, int>();
+                var charDict = new Dictionary<char, int>();
                 for(int i = 0; i< input.Length; i++)
                 {
-                    if(!dict.ContainsKey(input[i]))
+                    if(!charDict.ContainsKey(input[i]))
                     {
-                        dict.Add(input[i], countOccurance(input, input[i]));
+                        charDict.Add(input[i], countOccurance(input, input[i]));
                     }
                 }
-                /*
-                    fortsätt här
-                    bygg upp en lista över alla resultat i dict där värdet är störren än 1.
-                    spara ner i en lista över antalet förekomster av en och samma
-
-                */
+                if(charDict.ContainsValue(2))
+                    twiceCnt++;
+                if(charDict.ContainsValue(3))
+                    thriceCnt++;
             }
-            return result.ToString();
+            return (twiceCnt * thriceCnt).ToString();
         }
 
         public override string executeB(string[] inputs)
         {
-            return "NotImplemented";
+            int charPos = -1;
+            int arrPos = -1;
+            for(int i = 0; i < inputs.Length; i++)
+            {
+                for(int j = 0; j < inputs.Length; j++)
+                {
+                    int diffCnt = 0;
+                    for(int k = 0; k < inputs[i].Length; k++)
+                    {
+                        if(inputs[i][k] != inputs[j][k])
+                        {
+                            diffCnt++;
+                            charPos = k;
+                        }
+                    }
+                    if(diffCnt == 1)
+                    {
+                        arrPos = j;
+                        break;
+                    }
+
+                }
+                if(arrPos != -1)
+                {
+                    break;
+                }
+            }
+            return inputs[arrPos].Remove(charPos,1);
+            
         }
 
-        private int countOccurance(string inputString, char searchVal)
+        public int countOccurance(string inputString, char searchVal)
         {
             if(inputString.Length < 1)
                 return 0;
             
-            if(inputString[0] == searchVal)
-                return 1 + countOccurance(inputString.Substring(1), searchVal);
-            
-            return 0;
+            return (inputString[0] == searchVal ? 1 : 0) + countOccurance(inputString.Substring(1), searchVal);
         }
     }
 }
