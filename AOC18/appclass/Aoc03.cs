@@ -10,6 +10,7 @@ namespace AOC18{
         {
         }
 
+        // Skip cube and go for list with xyz values and look for matches
         public override string executeA(string[] inputs)
         {
             List<ClaimData> claimList = new List<ClaimData>();
