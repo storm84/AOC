@@ -6,10 +6,14 @@ namespace AOC18
     {
         static void Main(string[] args)
         {
-            //new Aoc01().run();    
-            new Aoc02().run();
-            //var a  = new Aoc02(); //.run();
-            //Console.WriteLine(a.countOccurance("aabbabdda", 'b')); 
+            int.TryParse(args[0],out int day);
+            switch(day)
+            {
+                case 1: new Aoc01().run(); break;
+                case 2: new Aoc02().run(); break;
+                case 3: new Aoc03().run(); break;
+                default: Console.WriteLine("Invalid parameter or not day implemented"); break;
+            }
         }
     }
 }
