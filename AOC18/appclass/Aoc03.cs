@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AOC18{
 
@@ -13,68 +14,94 @@ namespace AOC18{
         // Skip cube and go for list with xyz values and look for matches
         public override string executeA(string[] inputs)
         {
-            List<ClaimData> claimList = new List<ClaimData>();
-            int xMax = 0, yMax = 0;
+            Dictionary<string,int> overlapCnt = new Dictionary<string, int>();
             foreach(var input in inputs)
             {
                 //Parse input data
-                ClaimData claim = new ClaimData();
-                var tmp = input.Split('@');
-                claim.z = int.Parse(tmp[0].Trim().Remove(0,1));
-                tmp = tmp[1].Split(':');
-                var cord = tmp[0].Split(',');
-                var sides = tmp[1].Split('x');
-                claim.x = int.Parse(cord[0].Trim());
-                claim.y = int.Parse(cord[1].Trim());
-                claim.length = int.Parse(sides[0].Trim());
-                claim.height = int.Parse(sides[1].Trim());
+                ClaimData claim = parseClaim(input);
                 
-                //calc cube xMax and yMax
-                if(claim.x+claim.length > xMax)
-                    xMax = claim.x+claim.length;
-                if(claim.y+claim.height > yMax)
-                    yMax = claim.y+claim.height;  
-                claimList.Add(claim);    
-            }
-
-            //build cube
-            bool [,,] cube = new bool[xMax,yMax,claimList.Count];
-            for(int z=0; z < claimList.Count; z++)
-            {
-                for(int y=0; y < claimList[z].height; y++)
+                //check overlap
+                for(int y=0; y < claim.height; y++)
                 {
-                    for(int x=0; x < claimList[z].length; x++)
+                    for(int x=0; x < claim.length; x++)
                     {
-                        cube[claimList[z].x+x, claimList[z].y+y, z] = true;
-                    }
-                }
-            }
-            
-            // count overlap
-            int overlap = 0;
-            bool match;
-            for (int z = 0; z < cube.GetLength(2)-1; z++)
-            {
-                match = false;
-                for(int y=0; y < cube.GetLength(1); y++)
-                {
-                    for(int x=0; x < cube.GetLength(0); x++)
-                    {
-                        if(cube[x,y,z] == true && cube[x,y,z+1] == true)
+                        var key = $"X{claim.x+x}Y{claim.y+y}"; 
+                        if(overlapCnt.ContainsKey(key))
                         {
-                            match = true;
-                            break;
+                            overlapCnt[key]++;
+                        }
+                        else
+                        {
+                            overlapCnt.Add(key, 1);
                         }
                     }
-                    if(match) break;
                 }
-                if(match) overlap++;
             }
-            return overlap.ToString();
+            return overlapCnt.Values.Where(x=> x > 1).Count().ToString();
         }
         public override string executeB(string[] inputs)
         {
-            return "not implemented";
+            Dictionary<string,int> overlapCnt = new Dictionary<string, int>();
+            List<ClaimData> claims = new List<ClaimData>();
+            foreach(var input in inputs)
+            {
+                //Parse input data
+                ClaimData claim = parseClaim(input);
+                claims.Add(claim);
+                //check overlap
+                for(int y=0; y < claim.height; y++)
+                {
+                    for(int x=0; x < claim.length; x++)
+                    {
+                        var key = $"X{claim.x+x}Y{claim.y+y}"; 
+                        if(overlapCnt.ContainsKey(key))
+                        {
+                            overlapCnt[key]++;
+                        }
+                        else
+                        {
+                            overlapCnt.Add(key, 1);
+                        }
+                    }
+                }
+            }
+
+            // search for the single claim that doesn't overlap
+            bool found;
+            foreach(var claim in claims)
+            {
+                found = true;
+                for(int y=0; y < claim.height; y++)
+                {
+                    for(int x=0; x < claim.length; x++)
+                    {
+                        var key = $"X{claim.x+x}Y{claim.y+y}"; 
+                        if(overlapCnt[key] != 1)
+                        {
+                            found = false;
+                            break;
+                        }
+                    }
+                    if(!found) break;
+                }
+                if(found) return claim.z.ToString();
+            }
+            return "claim not found";
+        }
+
+        private ClaimData parseClaim(string input)
+        {
+            ClaimData claim = new ClaimData();
+            var tmp = input.Split('@');
+            claim.z = int.Parse(tmp[0].Trim().Remove(0,1));
+            tmp = tmp[1].Split(':');
+            var cord = tmp[0].Split(',');
+            var sides = tmp[1].Split('x');
+            claim.x = int.Parse(cord[0].Trim());
+            claim.y = int.Parse(cord[1].Trim());
+            claim.length = int.Parse(sides[0].Trim());
+            claim.height = int.Parse(sides[1].Trim());
+            return claim;
         }
         struct ClaimData
         {
@@ -85,6 +112,7 @@ namespace AOC18{
             public int height;
 
         }
-        
+
+         
     }
 }
