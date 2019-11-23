@@ -6,13 +6,17 @@ namespace AOC18
     {
         static void Main(string[] args)
         {
-            int.TryParse(args[0],out int day);
+            int day = 0;
+            if(args.Length > 0)
+                int.TryParse(args[0],out day);
+            
             switch(day)
             {
                 case 1: new Aoc01().run(); break;
                 case 2: new Aoc02().run(); break;
                 case 3: new Aoc03().run(); break;
-                default: Console.WriteLine("Invalid parameter or not day implemented"); break;
+                case 4: new Aoc04().run(); break;
+                default: Console.WriteLine("Invalid parameter or day is not implemented"); break;
             }
         }
     }

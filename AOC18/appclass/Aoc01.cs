@@ -6,7 +6,7 @@ namespace AOC18
 {
     class Aoc01 : AocBase
     {
-        public Aoc01() : base(@"data/input1.txt")
+        public Aoc01() : base(@"data/input01.txt")
         {
             
         }

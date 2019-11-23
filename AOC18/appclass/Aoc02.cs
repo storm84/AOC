@@ -6,7 +6,7 @@ namespace AOC18
 {
     class Aoc02 : AocBase
     {
-        public Aoc02() : base(@"data/input2.txt")
+        public Aoc02() : base(@"data/input02.txt")
         {
         }
         public override string executeA(string[] inputs)
