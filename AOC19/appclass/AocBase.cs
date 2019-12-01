@@ -11,24 +11,32 @@ namespace AOC19
             _filepath = filepath;
         }
         private string _filepath;
-        public void run()
+        public void Run()
         {
             Console.WriteLine("********** start execution ********** ");
-            var inputs = File.ReadAllLines(_filepath);
-            Console.WriteLine($"result A: {executeA(inputs)}");
-            Console.WriteLine($"result B: {executeB(inputs)}");
+            if(File.Exists(_filepath))
+            {
+                var inputs = File.ReadAllLines(_filepath);
+                Console.WriteLine($"result A: {ExecuteA(inputs)}");
+                Console.WriteLine($"result B: {ExecuteB(inputs)}");
+            }
+            else 
+            {
+                Console.WriteLine("ERROR: Inputfile not not found!");
+            }
             Console.WriteLine("********** execution done  ********** ");
         }
+        
         public void runTest(string[] inputs)
         {
             Console.WriteLine("********** start test ********** ");
-            Console.WriteLine($"result A: {executeA(inputs)}");
-            Console.WriteLine($"result B: {executeB(inputs)}");
+            Console.WriteLine($"result A: {ExecuteA(inputs)}");
+            Console.WriteLine($"result B: {ExecuteB(inputs)}");
             Console.WriteLine("********** test done  ********** ");
         }
 
-        public abstract string executeA(string[] inputs);
-        public abstract string executeB(string[] inputs);
+        public abstract string ExecuteA(string[] inputs);
+        public abstract string ExecuteB(string[] inputs);
 
     }
 }

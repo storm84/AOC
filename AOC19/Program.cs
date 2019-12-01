@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace AOC19
 {
@@ -10,14 +13,30 @@ namespace AOC19
             if(args.Length > 0)
                 int.TryParse(args[0],out day);
             
-            switch(day)
-            {
-                case 1: new Aoc01($"data/input{day}.txt").run(); break;
-                //case 2: new Aoc02().run(); break;
-                //case 3: new Aoc03().run(); break;
-                //case 4: new Aoc04().run(); break;
-                default: Console.WriteLine("Invalid parameter or day is not implemented"); break;
-            }
+            var impl = GetImplementationInstance(day.ToString("00"));
+            if(impl != null)
+                impl.Run();
+            else 
+                Console.WriteLine("Invalid parameter or day is not implemented");
+        }
+
+        private static AocBase GetImplementationInstance(string day)
+        {
+            string className = $"Aoc{day}";
+            string pathParam = $"data/input{day}.txt";
+
+            var type = GetDerivedTypesFor(typeof(AocBase))
+                .FirstOrDefault(t => t.Name == className);
+
+            return type != null ?  (AocBase) Activator.CreateInstance(type, pathParam): null;
+        }
+
+        private static IEnumerable<Type> GetDerivedTypesFor(Type baseType)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            return assembly.GetTypes()
+                .Where(baseType.IsAssignableFrom)
+                .Where(t => baseType != t);
         }
     }
 }
