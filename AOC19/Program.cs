@@ -23,7 +23,7 @@ namespace AOC19
         private static AocBase GetImplementationInstance(string day)
         {
             string className = $"Aoc{day}";
-            string pathParam = $"data/input{day}.txt";
+            string pathParam = $"data/{day}.aoc";
 
             var type = GetDerivedTypesFor(typeof(AocBase))
                 .FirstOrDefault(t => t.Name == className);
