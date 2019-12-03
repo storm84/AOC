@@ -11,16 +11,22 @@ namespace AOC19
         {
             int day = 0;
             if(args.Length > 0)
+            {
                 int.TryParse(args[0],out day);
+            }
             
-            var impl = GetImplementationInstance(day.ToString("00"));
-            if(impl != null)
-                impl.Run();
+            var implementation = CreateInstanceByDay(day.ToString("00"));
+            if(implementation != null)
+            {
+                implementation.Run();
+            }
             else 
-                Console.WriteLine("Invalid parameter or day is not implemented");
+            {
+                Console.WriteLine("Invalid parameter or day is not implemented\nRun the application with day as input parameter (1-25)");
+            }
         }
 
-        private static AocBase GetImplementationInstance(string day)
+        private static AocBase CreateInstanceByDay(string day)
         {
             string className = $"Aoc{day}";
             string pathParam = $"data/{day}.aoc";

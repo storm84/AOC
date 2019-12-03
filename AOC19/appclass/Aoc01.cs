@@ -6,7 +6,7 @@ namespace AOC19
         {
         }
 
-        public override string ExecuteA(string[] inputs)
+        public override string PartA(string[] inputs)
         {
             int sum = 0;
             foreach(var input in inputs)
@@ -16,7 +16,7 @@ namespace AOC19
             return sum.ToString();
         }
 
-        public override string ExecuteB(string[] inputs)
+        public override string PartB(string[] inputs)
         {
             int sum = 0;
             foreach(var input in inputs)

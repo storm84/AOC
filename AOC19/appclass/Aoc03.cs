@@ -9,7 +9,7 @@ namespace AOC19
         {
         }
 
-        public override string ExecuteA(string[] inputs)
+        public override string PartA(string[] inputs)
         {
             
             List<Point> intersectionPoints = GetIntersectionPoints(inputs);
@@ -26,7 +26,7 @@ namespace AOC19
             return minDistance.ToString();
         }
 
-        public override string ExecuteB(string[] inputs)
+        public override string PartB(string[] inputs)
         {
             List<Point> intersectionPoints = GetIntersectionPoints(inputs);
             int minDistance = int.MaxValue;

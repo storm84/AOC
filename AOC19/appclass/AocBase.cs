@@ -17,8 +17,8 @@ namespace AOC19
             if(File.Exists(_filepath))
             {
                 var inputs = File.ReadAllLines(_filepath);
-                Console.WriteLine($"result A: {ExecuteA(inputs)}");
-                Console.WriteLine($"result B: {ExecuteB(inputs)}");
+                Console.WriteLine($"result A: {PartA(inputs)}");
+                Console.WriteLine($"result B: {PartB(inputs)}");
             }
             else 
             {
@@ -30,13 +30,13 @@ namespace AOC19
         public void runTest(string[] inputs)
         {
             Console.WriteLine("********** start test ********** ");
-            Console.WriteLine($"result A: {ExecuteA(inputs)}");
-            Console.WriteLine($"result B: {ExecuteB(inputs)}");
+            Console.WriteLine($"result A: {PartA(inputs)}");
+            Console.WriteLine($"result B: {PartB(inputs)}");
             Console.WriteLine("********** test done  ********** ");
         }
 
-        public abstract string ExecuteA(string[] inputs);
-        public abstract string ExecuteB(string[] inputs);
+        public abstract string PartA(string[] inputs);
+        public abstract string PartB(string[] inputs);
 
     }
 }

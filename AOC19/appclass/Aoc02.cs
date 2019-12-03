@@ -10,7 +10,7 @@ namespace AOC19
         {
         }
 
-        public override string ExecuteA(string[] inputs)
+        public override string PartA(string[] inputs)
         {
             var intcodes = inputs[0].Split(',').Select(int.Parse).ToArray();
             
@@ -20,6 +20,24 @@ namespace AOC19
             return Compute(intcodes).ToString();
         }
         
+        public override string PartB(string[] inputs)
+        {
+            var intcodes = inputs[0].Split(',').Select(int.Parse).ToArray();
+            for (int noun = 0; noun < 99; noun++)
+            {
+                for(int verb = 0; verb < 99; verb++)
+                {
+                    var local = (int[]) intcodes.Clone();
+                    local[1] = noun;
+                    local[2] = verb;
+                    if(Compute(local) == 19690720)
+                    {
+                        return (100 * noun + verb).ToString();
+                    }       
+                }
+            }
+            return "not found";
+        }
         private int Compute(int[] intcodes)
         {
             for(int i = 0; i< intcodes.Length; i+=4)
@@ -47,25 +65,6 @@ namespace AOC19
 
             }
             return intcodes[0];
-        }
-
-        public override string ExecuteB(string[] inputs)
-        {
-            var intcodes = inputs[0].Split(',').Select(int.Parse).ToArray();
-            for (int noun = 0; noun < 99; noun++)
-            {
-                for(int verb = 0; verb < 99; verb++)
-                {
-                    var local = (int[]) intcodes.Clone();
-                    local[1] = noun;
-                    local[2] = verb;
-                    if(Compute(local) == 19690720)
-                    {
-                        return (100 * noun + verb).ToString();
-                    }       
-                }
-            }
-            return "not found";
         }
     }
 }
