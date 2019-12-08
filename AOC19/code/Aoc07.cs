@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace AOC19
 {
@@ -13,7 +15,23 @@ namespace AOC19
         public override string PartA(string[] inputs)
         {
             var intcodes = inputs[0].Split(',').Select(int.Parse).ToArray();
-            Stack<int> inputStack  = new Stack<int>();
+            var maxSignal = FindMaxSignal(intcodes, 0);
+            return maxSignal.ToString();
+        }
+
+
+        public override string PartB(string[] inputs)
+        {
+            var intcodes = inputs[0].Split(',').Select(int.Parse).ToArray();
+            var maxSignal = FindMaxSignal(intcodes, 5);
+            return maxSignal.ToString();           
+
+        }
+
+
+
+        private int FindMaxSignal(int[] intcodes, int offset)
+        {
             int maxSignal = int.MinValue;
             
             for(int a = 0; a < 5; a++) //Amp A
@@ -34,17 +52,7 @@ namespace AOC19
                                         {
                                             if(e != a && e != b && e != c && e != d) 
                                             {
-                                                inputStack.Push(0);
-                                                inputStack.Push(a);
-                                                inputStack.Push(Compute(intcodes, inputStack));
-                                                inputStack.Push(b);
-                                                inputStack.Push(Compute(intcodes, inputStack));
-                                                inputStack.Push(c);
-                                                inputStack.Push(Compute(intcodes, inputStack));
-                                                inputStack.Push(d);
-                                                inputStack.Push(Compute(intcodes, inputStack));
-                                                inputStack.Push(e);
-                                                int signal = Compute(intcodes, inputStack);
+                                                int signal = runAmps(intcodes, a+offset, b+offset, c+offset, d+offset, e+offset);
                                                 if(signal > maxSignal)
                                                 {
                                                     maxSignal = signal;
@@ -58,19 +66,34 @@ namespace AOC19
                     }
                 }
             }
-            return maxSignal.ToString();
+            return maxSignal;
         }
-
-
-        public override string PartB(string[] inputs)
+        
+        private int runAmps(int[] intcodes, int a, int b, int c, int d, int e)
         {
-            return "Not implemented";
-        }
+            List<Queue<int>> queues = new List<Queue<int>>{ new Queue<int>(), new Queue<int>(), new Queue<int>(), new Queue<int>(), new Queue<int>() };
 
-        private int Compute(int[] intcodes, Stack<int> inputStack)
+            //init queues
+            queues[0].Enqueue(a);
+            queues[0].Enqueue(0);  //startinput
+            queues[1].Enqueue(b);
+            queues[2].Enqueue(c);
+            queues[3].Enqueue(d);
+            queues[4].Enqueue(e);
+            
+            var t1 = Task.Run(() => Compute(intcodes.ToArray(), queues[0], queues[1]));
+            var t2 = Task.Run(() => Compute(intcodes.ToArray(), queues[1], queues[2]));
+            var t3 = Task.Run(() => Compute(intcodes.ToArray(), queues[2], queues[3]));
+            var t4 = Task.Run(() => Compute(intcodes.ToArray(), queues[3], queues[4]));
+            var t5 = Task.Run(() => Compute(intcodes.ToArray(), queues[4], queues[0]));
+            Task.WaitAll(t1,t2,t3,t4,t5); 
+
+            return t5.Result.Last();
+        }
+        
+        private Queue<int> Compute(int[] intcodes, Queue<int> inputQueue, Queue<int> outputQueue)
         {
             int pc = 0;
-            int output = 0;
             while(pc < intcodes.Length)
             {
                 var instruction = intcodes[pc].ToString("00000");
@@ -101,15 +124,30 @@ namespace AOC19
                     //read input from console
                     //Console.WriteLine("Enter a valid integer input: ");
                     //intcodes[intcodes[pc+1]] = int.Parse(Console.ReadLine());
-                    //read input from stack
-                    intcodes[intcodes[pc+1]] = inputStack.Pop();
+                    
+                    //read input from inputQueue
+                    bool spinlock = true;
+                    while (spinlock)
+                    {
+                        lock(inputQueue){
+                            if(inputQueue.Any())
+                            {
+                                intcodes[intcodes[pc+1]] = inputQueue.Dequeue();
+                                spinlock = false;
+                            }
+                         }
+                    }
                     pc += 2;
                 }
                 else if(opcode == 4)
                 {
                     //write output
-                    output = p1PosMode ? intcodes[intcodes[pc+1]] : intcodes[pc+1];
-                    Console.WriteLine(output);
+                    var output = p1PosMode ? intcodes[intcodes[pc+1]] : intcodes[pc+1];
+                    //Console.WriteLine(output);
+                    lock(outputQueue)
+                    {
+                        outputQueue.Enqueue(output);
+                    }
                     pc += 2;
                 }
                 else if(opcode == 5)
@@ -169,7 +207,7 @@ namespace AOC19
                 }
 
             }
-            return output;
+            return outputQueue;
         }
     }
 }
