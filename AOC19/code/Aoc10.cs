@@ -18,7 +18,7 @@ namespace AOC19
                 for(int x = 0; x < inputs[y].Length; x++)
                     if(inputs[y][x] == '#')
                     {
-                        int meteorCount = CountMeteors(inputs,x,y);
+                        int meteorCount = GetVectorsForMeteors(inputs,x,y).Count;
                         if(meteorCount > maxCnt)
                         {
                             maxCnt = meteorCount;
@@ -28,9 +28,9 @@ namespace AOC19
             return maxCnt.ToString();
         }
 
-        private int CountMeteors(string[] inputs, int xIn, int yIn)
+        private List<Vector2> GetVectorsForMeteors(string[] inputs, int xIn, int yIn)
         {
-            List<string> vectorList = new List<string>();
+            List<Vector2> vectorList = new List<Vector2>();
             for(int y = 0; y < inputs.Length; y++)
             {
                 for(int x = 0; x < inputs[y].Length; x++)
@@ -42,14 +42,15 @@ namespace AOC19
                         int gcd = GCD(xtmp,ytmp);
                         xtmp = xtmp/gcd;
                         ytmp = ytmp/gcd;
-                        if(!vectorList.Contains($"X{xtmp}_Y{ytmp}"))
+                        var v2 = new Vector2(xtmp,ytmp);
+                        if(!vectorList.Contains(v2) )
                         {
-                            vectorList.Add($"X{xtmp}_Y{ytmp}");
+                            vectorList.Add(v2);
                         }
                     }
                 }
             }
-            return vectorList.Count;
+            return vectorList;
         }
 
         private int GCD(int a, int b)
@@ -67,6 +68,23 @@ namespace AOC19
         }
         public override string PartB(string[] inputs)
         {
+            int stationX, stationY;
+            List<Vector2> vectorList = new List<Vector2>();
+            for(int y = 0; y < inputs.Length; y++)
+            {
+                for(int x = 0; x < inputs[y].Length; x++)
+                    if(inputs[y][x] == '#')
+                    {
+                        var v2List  = GetVectorsForMeteors(inputs,x,y);
+                        if(v2List.Count > vectorList.Count)
+                        {
+                            vectorList = v2List;
+                            stationX = x;
+                            stationY = y;
+                        }
+                    }
+            }
+            // how to sort the vectors?
             return "not implemented";
         }
     }
