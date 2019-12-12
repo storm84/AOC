@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 
 namespace AOC19
@@ -14,40 +12,22 @@ namespace AOC19
         {
             var program = inputs[0].Split(',').Select(long.Parse).ToArray();
             var computer = new IntecodeComputer(program);
-            computer.OutputToConsole = true;
-            var inputOutputQueue = new Queue<long>();
-            inputOutputQueue.Enqueue(0);
-            computer.Compute(inputOutputQueue, inputOutputQueue);
-            return "not implemented";
+            //computer.OutputToConsole = true;
+            PaintingRobot rob = new PaintingRobot(computer);
+            rob.Run(0);
+            return rob.PaintedPanelCount.ToString();
         }
 
         public override string PartB(string[] inputs)
         {
-            return "not implemented";
+            var program = inputs[0].Split(',').Select(long.Parse).ToArray();
+            var computer = new IntecodeComputer(program);
+            //computer.OutputToConsole = true;
+            PaintingRobot rob = new PaintingRobot(computer);
+            rob.Run(1);
+            rob.Print();
+            return "done!";
+            
         }
-    }
-    class Robot
-    {
-        public Robot(IntecodeComputer icc)
-        {
-            intecodeComputer = icc;
-        }
-        private int posX = 0, posY = 0, xDir = 0, yDir = 0;
-        private IntecodeComputer intecodeComputer;
-        private Dictionary<Point,char> grid = new Dictionary<Point, char>();
-        private void Run()
-        {       var p = new Point(posX,posY);
-                char color;
-                if(grid.ContainsKey(p))
-                {
-                    color = grid[p];
-                }
-                else{
-                    color = '.';
-                    grid.Add(p,color);
-                }
-        }
-
-        
     }
 }

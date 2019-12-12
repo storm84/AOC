@@ -11,10 +11,17 @@ namespace AOC19
             //Expand memory
             memory = new long[program.Length * 10];
             program.CopyTo(memory,0);
+            
+            //init queues
+            InputQueue = new Queue<long>();
+            OutputQueue = new Queue<long>();
         }
         private long [] memory;
         public bool OutputToConsole { get; set; }
 
+        public Queue<long> InputQueue { get; set; }
+        public Queue<long> OutputQueue { get; set; }
+        
         private long GetParameter(long index, char mode, long relativeBase)
         {
             switch(mode)
@@ -34,7 +41,8 @@ namespace AOC19
             }
         }
 
-        public Queue<long> Compute(Queue<long> inputQueue, Queue<long> outputQueue)
+        //public Queue<long> Compute()
+        public void Compute()
         {
             long pc = 0;    //program counter
             long rb = 0;    //relative base
@@ -69,10 +77,10 @@ namespace AOC19
                     bool spinlock = true;
                     while (spinlock)
                     {
-                        lock(inputQueue){
-                            if(inputQueue.Any())
+                        lock(InputQueue){
+                            if(InputQueue.Any())
                             {
-                                SetParameter(pc+1, p1Mode, rb, inputQueue.Dequeue());
+                                SetParameter(pc+1, p1Mode, rb, InputQueue.Dequeue());
                                 spinlock = false;
                             }
                          }
@@ -85,9 +93,9 @@ namespace AOC19
                     var output = GetParameter(pc+1, p1Mode, rb);
                     if(OutputToConsole)
                         Console.WriteLine(output);
-                    lock(outputQueue)
+                    lock(OutputQueue)
                     {
-                        outputQueue.Enqueue(output);
+                        OutputQueue.Enqueue(output);
                     }
                     pc += 2;
                 }
@@ -153,7 +161,7 @@ namespace AOC19
                 }
 
             }
-            return outputQueue;
+            //return OutputQueue;
         }
     }
 }
