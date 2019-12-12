@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 
 namespace AOC19
@@ -68,7 +70,7 @@ namespace AOC19
         }
         public override string PartB(string[] inputs)
         {
-            int stationX, stationY;
+            int stationX = 0, stationY = 0;
             List<Vector2> vectorList = new List<Vector2>();
             for(int y = 0; y < inputs.Length; y++)
             {
@@ -84,8 +86,39 @@ namespace AOC19
                         }
                     }
             }
-            // how to sort the vectors?
-            return "not implemented";
+            vectorList.Sort( new MeteorVectorComparer());
+            
+            // get the vector direction for meteor 200
+            var meteorDirection = vectorList[199];
+            
+            //find first meteor on the vector direction
+            int i = 1;
+            while(inputs[((int)meteorDirection.Y*i) + stationY][((int)meteorDirection.X*i)+stationX] != '#')
+            {
+                i++;
+            }
+            int result = ((((int)meteorDirection.X*i)+ stationX) * 100) + (((int)meteorDirection.Y*i)+stationY);
+            return result.ToString();
         }
+    }
+
+    class MeteorVectorComparer: IComparer<Vector2>
+    {
+        public int Compare(Vector2 v1, Vector2 v2)
+        {   
+            var vec1 = (Vector2)v1;
+            var vec2 = (Vector2)v2;
+            
+            if(vec1.Equals(vec2))
+                return 0;
+            
+            float angle1 = MathF.Atan2(vec1.X, vec1.Y);
+            float angle2 = MathF.Atan2(vec2.X, vec2.Y);
+            if(angle1 < angle2)
+                return 1;
+            return -1;
+        }
+
+
     }
 }
