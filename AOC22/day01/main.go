@@ -2,14 +2,15 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/storm84/AOC/AOC22/utils"
 )
 
 func main() {
-	lines, err := readLines("input")
+	lines, err := utils.ReadLines("input")
 	if err != nil {
 		panic(err)
 	}
@@ -40,14 +41,4 @@ func sumSlice(slice []int) int {
 		res += v
 	}
 	return res
-}
-
-func readLines(name string) ([]string, error) {
-	data, err := os.ReadFile(name)
-	if err != nil {
-		return nil, err
-	}
-	res := strings.Split(string(data), "\n")
-
-	return res, nil
 }
