@@ -14,3 +14,9 @@ func ReadLines(name string) ([]string, error) {
 
 	return res, nil
 }
+
+func Check(err error) {
+	if err != nil {
+		panic(err)
+	}
+}
