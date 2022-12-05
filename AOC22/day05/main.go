@@ -12,8 +12,8 @@ func main() {
 	lines, err := utils.ReadLines("input")
 	utils.Check(err)
 
-	fmt.Printf("The anser to A is: %s\n", solve(lines, false))
-	fmt.Printf("The anser to B is: %s\n", solve(lines, true))
+	fmt.Printf("The answer to A is: %s\n", solve(lines, false))
+	fmt.Printf("The answer to B is: %s\n", solve(lines, true))
 
 }
 
