@@ -53,7 +53,7 @@ int GetCalibrationB(string str)
 
     var first = Array.IndexOf(arr, result.First().SearchWord) % 10;
     var last = Array.IndexOf(arr, result.Last().SearchWord) % 10;
-    return int.Parse($"{first}{last}");
+    return first * 10 + last;
 }
 
 Console.WriteLine($"The answer to A is {SolveA(input)}");
